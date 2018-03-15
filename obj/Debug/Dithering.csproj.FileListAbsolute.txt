@@ -1,0 +1,9 @@
+c:\users\ulaborys\documents\visual studio 2017\Projects\Dithering\Dithering\bin\Debug\Dithering.exe.config
+c:\users\ulaborys\documents\visual studio 2017\Projects\Dithering\Dithering\bin\Debug\Dithering.exe
+c:\users\ulaborys\documents\visual studio 2017\Projects\Dithering\Dithering\bin\Debug\Dithering.pdb
+c:\users\ulaborys\documents\visual studio 2017\Projects\Dithering\Dithering\obj\Debug\Dithering.csprojResolveAssemblyReference.cache
+c:\users\ulaborys\documents\visual studio 2017\Projects\Dithering\Dithering\obj\Debug\Dithering.Form1.resources
+c:\users\ulaborys\documents\visual studio 2017\Projects\Dithering\Dithering\obj\Debug\Dithering.Properties.Resources.resources
+c:\users\ulaborys\documents\visual studio 2017\Projects\Dithering\Dithering\obj\Debug\Dithering.csproj.GenerateResource.Cache
+c:\users\ulaborys\documents\visual studio 2017\Projects\Dithering\Dithering\obj\Debug\Dithering.exe
+c:\users\ulaborys\documents\visual studio 2017\Projects\Dithering\Dithering\obj\Debug\Dithering.pdb
