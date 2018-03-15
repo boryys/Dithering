@@ -20,9 +20,9 @@ namespace Dithering
             InitializeComponent();
             pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
             pictureBox1.SizeMode = PictureBoxSizeMode.CenterImage;
-            matrix.Enabled = false;
+            matrixBox.Enabled = false;
             kBox.Text = "2";
-            matrix.Text = "F&S";
+            matrixBox.Text = "F&S";
         }
 
         private void grayScaleFilter()
@@ -68,18 +68,18 @@ namespace Dithering
         {
             Color color;
             double c;
-            Bitmap tmp = (Bitmap)originalPhoto.Clone();
+            Bitmap tmp = (Bitmap)grayScaledPhoto.Clone();
 
             Random r = new Random();
             double b = 0, w = 255;
 
-            for (int x = 0; x < originalPhoto.Width; x++)
+            for (int x = 0; x < grayScaledPhoto.Width; x++)
             {
-                for (int y = 0; y < originalPhoto.Height; y++)
+                for (int y = 0; y < grayScaledPhoto.Height; y++)
                 {
-                    color = originalPhoto.GetPixel(x, y);
+                    color = grayScaledPhoto.GetPixel(x, y);
 
-                    c = (color.R + color.G + color.B) / 3;
+                    c = color.R;
 
                     int th = r.Next(0, 256);
 
@@ -101,7 +101,7 @@ namespace Dithering
         {
             Color color;
             double c;
-            Bitmap tmp = (Bitmap)originalPhoto.Clone();
+            Bitmap tmp = (Bitmap)grayScaledPhoto.Clone();
 
             Random r = new Random();
             double b = 0, w = 255;
@@ -110,9 +110,9 @@ namespace Dithering
             {
                 for (int y = 0; y < originalPhoto.Height; y++)
                 {
-                    color = originalPhoto.GetPixel(x, y);
+                    color = grayScaledPhoto.GetPixel(x, y);
 
-                    c = (color.R + color.G + color.B) / 3;
+                    c = color.R;
 
                     int th1 = r.Next(0, 256);
                     int th2 = r.Next(0, th1 + 1);
@@ -138,7 +138,7 @@ namespace Dithering
         {
             Color color;
             double c;
-            Bitmap tmp = (Bitmap)originalPhoto.Clone();
+            Bitmap tmp = (Bitmap)grayScaledPhoto.Clone();
 
             Random r = new Random();
             double b = 0, w = 255;
@@ -147,9 +147,9 @@ namespace Dithering
             {
                 for (int y = 0; y < originalPhoto.Height; y++)
                 {
-                    color = originalPhoto.GetPixel(x, y);
+                    color = grayScaledPhoto.GetPixel(x, y);
 
-                    c = (color.R + color.G + color.B) / 3;
+                    c = color.R;
 
                     int th1 = r.Next(0, 256);
                     int th2 = r.Next(0, th1 + 1);
@@ -195,18 +195,18 @@ namespace Dithering
         {
             Color color;
             double c;
-            Bitmap tmp = (Bitmap)originalPhoto.Clone();
+            Bitmap tmp = (Bitmap)grayScaledPhoto.Clone();
 
             Random r = new Random();
             double b = 0, w = 255;
 
-            for (int x = 0; x < originalPhoto.Width; x++)
+            for (int x = 0; x < grayScaledPhoto.Width; x++)
             {
-                for (int y = 0; y < originalPhoto.Height; y++)
+                for (int y = 0; y < grayScaledPhoto.Height; y++)
                 {
-                    color = originalPhoto.GetPixel(x, y);
+                    color = grayScaledPhoto.GetPixel(x, y);
 
-                    c = (color.R + color.G + color.B) / 3;
+                    c = color.R;
 
                     int th1 = r.Next(0, 256);
                     int th2 = r.Next(0, th1 + 1);
@@ -288,6 +288,122 @@ namespace Dithering
             return tmp;
         }
 
+        private void FandS()
+        {
+            double[,] matrix = {
+                        {  0, 0, 3 },
+                        {  0, 0, 7 },
+                        {  0, 7, 1 }
+                     }; 
+
+            pictureBox1.Image = errorDifusionFilter(matrix, 1, 1, 16);
+        }
+
+        private void B()
+        {
+            double[,] matrix = {
+                        {  0, 0, 2 },
+                        {  0, 0, 4 },
+                        {  0, 0, 8 },
+                        {  0, 8, 4 },
+                        {  0, 4, 2 },
+                     }; 
+
+            pictureBox1.Image = errorDifusionFilter(matrix, 2, 1, 32);
+        }
+
+        private void St()
+        {
+            double[,] matrix = {
+                        {  0, 0, 0, 2, 1 },
+                        {  0, 0, 0, 4, 2 },
+                        {  0, 0, 0, 8, 4 },
+                        {  0, 0, 8, 4, 2 },
+                        {  0, 0, 4, 2, 1 },
+                     };
+
+            pictureBox1.Image = errorDifusionFilter(matrix, 2, 2, 42);
+        }
+
+        private void Sr()
+        {
+            double[,] matrix = {
+                        {  0, 0, 0, 2, 0 },
+                        {  0, 0, 0, 4, 2 },
+                        {  0, 0, 0, 5, 3 },
+                        {  0, 0, 5, 4, 2 },
+                        {  0, 0, 3, 2, 0 },
+                     };
+
+            pictureBox1.Image = errorDifusionFilter(matrix, 2, 2, 32);
+        }
+
+        private void A()
+        {
+            double[,] matrix = {
+                        {  0, 0, 0, 0, 0 },
+                        {  0, 0, 0, 1, 0 },
+                        {  0, 0, 0, 1, 1 },
+                        {  0, 0, 1, 1, 0 },
+                        {  0, 0, 1, 0, 0 },
+                     };
+
+            pictureBox1.Image = errorDifusionFilter(matrix, 2, 2, 8);
+        }
+
+        private Bitmap errorDifusionFilter(double[,] matrix, int f_x, int f_y, int div)
+        {
+            Color color;
+            double c, error;
+            Bitmap tmp = (Bitmap)grayScaledPhoto.Clone();
+            double b = 0, w = 255;
+
+            for (int x = 0; x < grayScaledPhoto.Width; x++)
+            {
+                for (int y = 0; y < grayScaledPhoto.Height; y++)
+                {
+                    color = tmp.GetPixel(x, y);
+
+                    c = color.R;
+
+                    if (c > w/2)
+                    {
+                        error = c - w;
+                        tmp.SetPixel(x, y, Color.FromArgb((int)w, (int)w, (int)w));
+                    }
+                    else
+                    {
+                        error = c - b;
+                        tmp.SetPixel(x, y, Color.FromArgb((int)b, (int)b, (int)b));
+                    }
+
+
+                    for (int i = -f_x; i <= f_x; ++i)
+                    {
+                        for (int j = -f_y; j <= f_y; ++j)
+                        {
+                            if ((x + i) >= 0 && (x + i) < grayScaledPhoto.Width && (y + j) >= 0 && (y + j) < grayScaledPhoto.Height)
+                            {
+                                Color clr = tmp.GetPixel(x + i, y + j);
+
+                                int check = clr.R + (int)(error * matrix[i + f_x, j + f_y] / div);
+
+                                if (check > 255) check = 255;
+                                else
+                                {
+                                    if (check < 0) check = 0;
+                                }
+
+                                tmp.SetPixel(x + i, y + j, Color.FromArgb(check, check, check));
+                            }
+                        }
+                    }
+                }
+            }
+
+            return tmp;
+        }
+
         private void loadImage_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog dlg = new OpenFileDialog())
@@ -307,12 +423,12 @@ namespace Dithering
 
         private void random_CheckedChanged(object sender, EventArgs e)
         {
-            matrix.Enabled = false;
+            matrixBox.Enabled = false;
         }
 
         private void error_CheckedChanged(object sender, EventArgs e)
         {
-            matrix.Enabled = true;
+            matrixBox.Enabled = true;
         }
 
         private void loadFilter_Click(object sender, EventArgs e)
@@ -326,7 +442,11 @@ namespace Dithering
             }
             if(error.Checked)
             {
-                
+                if (matrixBox.Text == "F&S") FandS();
+                if (matrixBox.Text == "B") B();
+                if (matrixBox.Text == "St") St();
+                if (matrixBox.Text == "Sr") Sr();
+                if (matrixBox.Text == "A") A();
             }
         }
     }

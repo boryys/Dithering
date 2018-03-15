@@ -33,7 +33,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.kBox = new System.Windows.Forms.ComboBox();
             this.loadImage = new System.Windows.Forms.Button();
-            this.matrix = new System.Windows.Forms.ComboBox();
+            this.matrixBox = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.error = new System.Windows.Forms.RadioButton();
@@ -83,7 +83,7 @@
             // 
             this.panel1.Controls.Add(this.kBox);
             this.panel1.Controls.Add(this.loadImage);
-            this.panel1.Controls.Add(this.matrix);
+            this.panel1.Controls.Add(this.matrixBox);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.error);
@@ -119,19 +119,19 @@
             this.loadImage.UseVisualStyleBackColor = true;
             this.loadImage.Click += new System.EventHandler(this.loadImage_Click);
             // 
-            // matrix
+            // matrixBox
             // 
-            this.matrix.FormattingEnabled = true;
-            this.matrix.Items.AddRange(new object[] {
+            this.matrixBox.FormattingEnabled = true;
+            this.matrixBox.Items.AddRange(new object[] {
             "F&S",
             "B",
             "St",
             "Sr",
             "A"});
-            this.matrix.Location = new System.Drawing.Point(11, 259);
-            this.matrix.Name = "matrix";
-            this.matrix.Size = new System.Drawing.Size(72, 21);
-            this.matrix.TabIndex = 7;
+            this.matrixBox.Location = new System.Drawing.Point(11, 259);
+            this.matrixBox.Name = "matrixBox";
+            this.matrixBox.Size = new System.Drawing.Size(72, 21);
+            this.matrixBox.TabIndex = 7;
             // 
             // label5
             // 
@@ -268,7 +268,7 @@
         private System.Windows.Forms.RadioButton error;
         private System.Windows.Forms.Button loadFilter;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.ComboBox matrix;
+        private System.Windows.Forms.ComboBox matrixBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox kBox;
