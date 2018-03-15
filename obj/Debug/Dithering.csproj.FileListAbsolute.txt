@@ -7,3 +7,12 @@ c:\users\ulaborys\documents\visual studio 2017\Projects\Dithering\Dithering\obj\
 c:\users\ulaborys\documents\visual studio 2017\Projects\Dithering\Dithering\obj\Debug\Dithering.csproj.GenerateResource.Cache
 c:\users\ulaborys\documents\visual studio 2017\Projects\Dithering\Dithering\obj\Debug\Dithering.exe
 c:\users\ulaborys\documents\visual studio 2017\Projects\Dithering\Dithering\obj\Debug\Dithering.pdb
+C:\Users\UlaBorys\Desktop\Grafika\Dithering\Dithering\bin\Debug\Dithering.exe.config
+C:\Users\UlaBorys\Desktop\Grafika\Dithering\Dithering\bin\Debug\Dithering.exe
+C:\Users\UlaBorys\Desktop\Grafika\Dithering\Dithering\bin\Debug\Dithering.pdb
+C:\Users\UlaBorys\Desktop\Grafika\Dithering\Dithering\obj\Debug\Dithering.csprojResolveAssemblyReference.cache
+C:\Users\UlaBorys\Desktop\Grafika\Dithering\Dithering\obj\Debug\Dithering.Form1.resources
+C:\Users\UlaBorys\Desktop\Grafika\Dithering\Dithering\obj\Debug\Dithering.Properties.Resources.resources
+C:\Users\UlaBorys\Desktop\Grafika\Dithering\Dithering\obj\Debug\Dithering.csproj.GenerateResource.Cache
+C:\Users\UlaBorys\Desktop\Grafika\Dithering\Dithering\obj\Debug\Dithering.exe
+C:\Users\UlaBorys\Desktop\Grafika\Dithering\Dithering\obj\Debug\Dithering.pdb
