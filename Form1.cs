@@ -157,8 +157,14 @@ namespace Dithering
         private Bitmap errorDifusionFilter(double[,] matrix, int f_x, int f_y, int div, int k)
         {
             Color color;
-            double c, error;
+            double c, c2, error = 0;
             Bitmap tmp = (Bitmap)grayScaledPhoto.Clone();
+            int[] m = new int[k];
+
+            for(int i = 0; i < k; i++)
+            {
+                m[i] = (int)((i + 1) * 255.0 / k);
+            }
 
             for (int x = 0; x < grayScaledPhoto.Width; x++)
             {
@@ -168,14 +174,14 @@ namespace Dithering
 
                     c = color.R;
 
-                    if(k == 2) error = error2(tmp, x, y, c);
-                    else
+                    for (int i = 0; i < k; i++)
                     {
-                        if (k == 4) error = error4(tmp, x, y, c);
-                        else
+                        if (c < m[i])
                         {
-                            if (k == 8) error = error8(tmp, x, y, c);
-                            else error = error4(tmp, x, y, c);
+                            c2 = i * 255.0 / (k - 1);
+                            error = c - c2;
+                            tmp.SetPixel(x, y, Color.FromArgb((int)c2, (int)c2, (int)c2));
+                            break;
                         }
                     }
 
@@ -203,134 +209,6 @@ namespace Dithering
             }
 
             return tmp;
-        }
-
-        private double error2(Bitmap tmp, int x, int y, double c)
-        {
-            double err;
-            double b = 0, w = 255;
-
-            if (c > w / 2)
-            {
-                err = c - w;
-                tmp.SetPixel(x, y, Color.FromArgb((int)w, (int)w, (int)w));
-            }
-            else
-            {
-                err = c - b;
-                tmp.SetPixel(x, y, Color.FromArgb((int)b, (int)b, (int)b));
-            }
-
-            return err;
-        }
-
-        private double error4(Bitmap tmp, int x, int y, double c)
-        {
-            double err;
-            double b = 0, w = 255;
-
-            if (c < w / 2)
-            {
-                if (c < w / 4)
-                {
-                    err = c - b;
-                    tmp.SetPixel(x, y, Color.FromArgb((int)b, (int)b, (int)b));
-                }
-                else
-                {
-                    err = c - w / 3;
-                    tmp.SetPixel(x, y, Color.FromArgb((int)(w / 3), (int)(w / 3), (int)(w / 3)));
-                }
-            }
-            else
-            {
-                if (c < (w * 3 / 4))
-                {
-                    err = c - (w * 2 / 3);
-                    tmp.SetPixel(x, y, Color.FromArgb((int)(w * 2 / 3), (int)(w * 2 / 3), (int)(w * 2 / 3)));
-                }
-                else
-                {
-                    err = c - w;
-                    tmp.SetPixel(x, y, Color.FromArgb((int)w, (int)w, (int)w));
-                }
-            }
-
-            return err;
-        }
-
-        private double error8(Bitmap tmp, int x, int y, double c)
-        {
-            double err;
-            double b = 0, w = 255;
-
-            if (c < w / 2)
-            {
-                if (c < w / 4)
-                {
-                    if (c < w / 8)
-                    {
-                        err = c - b;
-                        tmp.SetPixel(x, y, Color.FromArgb((int)b, (int)b, (int)b));
-                    }
-                    else
-                    {
-                        double clr = w / 7; 
-                        err = c - clr;
-                        tmp.SetPixel(x, y, Color.FromArgb((int)clr, (int)clr, (int)clr));
-                    }
-                }
-                else
-                {
-                    if (c < w * 3 / 8)
-                    {
-                        double clr = w * 2 / 7; 
-                        err = c - clr;
-                        tmp.SetPixel(x, y, Color.FromArgb((int)clr, (int)clr, (int)clr));
-                    }
-                    else
-                    {
-                        double clr = w * 3 / 7;
-                        err = c - clr;
-                        tmp.SetPixel(x, y, Color.FromArgb((int)clr, (int)clr, (int)clr));
-                    }
-                }
-            }
-            else
-            {
-                if (c < (w * 3 / 4))
-                {
-                    if (c < w * 5 / 8)
-                    {
-                        double clr = w * 4 / 7;
-                        err = c - clr;
-                        tmp.SetPixel(x, y, Color.FromArgb((int)clr, (int)clr, (int)clr));
-                    }
-                    else
-                    {
-                        double clr = w * 5 / 7;
-                        err = c - clr;
-                        tmp.SetPixel(x, y, Color.FromArgb((int)clr, (int)clr, (int)clr));
-                    }
-                }
-                else
-                {
-                    if (c < w * 7 / 8)
-                    {
-                        double clr = w * 6 / 7;
-                        err = c - clr;
-                        tmp.SetPixel(x, y, Color.FromArgb((int)clr, (int)clr, (int)clr));
-                    }
-                    else
-                    {
-                        double clr = w;
-                        err = c - clr;
-                        tmp.SetPixel(x, y, Color.FromArgb((int)clr, (int)clr, (int)clr));
-                    }
-                }
-            }
-
-            return err;
         }
 
         private void loadImage_Click(object sender, EventArgs e)
