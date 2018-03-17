@@ -48,30 +48,13 @@ namespace Dithering
 
         private Bitmap randomFilter(int k)
         {
-            Bitmap btm;
-
-            if (k == 2) btm = random2();
-            else
-            {
-                if (k == 4) btm = random4();
-                else
-                {
-                    if (k == 8) btm = random8();
-                    else btm = random16();
-                }
-            }
-
-            return btm;
-        }
-
-        private Bitmap random2()
-        {
             Color color;
-            double c;
+            int c;
+            double c2;
             Bitmap tmp = (Bitmap)grayScaledPhoto.Clone();
 
             Random r = new Random();
-            double b = 0, w = 255;
+            int [] m= new int[k - 1];
 
             for (int x = 0; x < grayScaledPhoto.Width; x++)
             {
@@ -81,206 +64,26 @@ namespace Dithering
 
                     c = color.R;
 
-                    int th = r.Next(0, 256);
-
-                    if (c > th)
+                    for (int i = 0; i < k - 1; i++)
                     {
-                        tmp.SetPixel(x, y, Color.FromArgb((int)w, (int)w, (int)w));
+                        double tmp1 = i * 255.0 / (k - 1), tmp2 = (i + 1) * 255.0 / (k - 1);
+                        m[(int)i] = r.Next((int)tmp1, (int)tmp2 + 1);
                     }
-                    else
+
+                    for (int i = 0; i < k - 1; i++)
                     {
-                        tmp.SetPixel(x, y, Color.FromArgb((int)b, (int)b, (int)b));
-                    }
-                }
-            }
-
-            return tmp;
-        }
-
-        private Bitmap random4()
-        {
-            Color color;
-            double c;
-            Bitmap tmp = (Bitmap)grayScaledPhoto.Clone();
-
-            Random r = new Random();
-            double b = 0, w = 255;
-
-            for (int x = 0; x < originalPhoto.Width; x++)
-            {
-                for (int y = 0; y < originalPhoto.Height; y++)
-                {
-                    color = grayScaledPhoto.GetPixel(x, y);
-
-                    c = color.R;
-
-                    int th1 = r.Next(0, 256);
-                    int th2 = r.Next(0, th1 + 1);
-                    int th3 = r.Next(th1, 256);
-
-                    if (c > th1)
-                    {
-                        if (c > th3) tmp.SetPixel(x, y, Color.FromArgb((int)w, (int)w, (int)w));
-                        else tmp.SetPixel(x, y, Color.FromArgb((int)(w * 2 / 3), (int)(w * 2 / 3), (int)(w * 2 / 3)));
-                    }
-                    else
-                    {
-                        if (c > th2) tmp.SetPixel(x, y, Color.FromArgb((int)(w / 3), (int)(w / 3), (int)(w / 3)));
-                        else tmp.SetPixel(x, y, Color.FromArgb((int)b, (int)b, (int)b));
-                    }
-                }
-            }
-
-            return tmp;
-        }
-
-        private Bitmap random8()
-        {
-            Color color;
-            double c;
-            Bitmap tmp = (Bitmap)grayScaledPhoto.Clone();
-
-            Random r = new Random();
-            double b = 0, w = 255;
-
-            for (int x = 0; x < originalPhoto.Width; x++)
-            {
-                for (int y = 0; y < originalPhoto.Height; y++)
-                {
-                    color = grayScaledPhoto.GetPixel(x, y);
-
-                    c = color.R;
-
-                    int th1 = r.Next(0, 256);
-                    int th2 = r.Next(0, th1 + 1);
-                    int th3 = r.Next(th1, 256);
-                    int th21 = r.Next(0, th2 + 1);
-                    int th22 = r.Next(th2, th1 + 1);
-                    int th31 = r.Next(th1, th3 + 1);
-                    int th32 = r.Next(th3, 256);
-
-                    if (c > th1)
-                    {
-                        if (c > th3)
+                        if (c < m[i])
                         {
-                            if (c > th32) tmp.SetPixel(x, y, Color.FromArgb((int)w, (int)w, (int)w));
-                            else tmp.SetPixel(x, y, Color.FromArgb((int)(w * 6 / 7), (int)(w * 6 / 7), (int)(w * 6 / 7)));
-                        }
-                        else
-                        {
-                            if(c > th31) tmp.SetPixel(x, y, Color.FromArgb((int)(w * 5 / 7), (int)(w * 5 / 7), (int)(w * 5 / 7)));
-                            else tmp.SetPixel(x, y, Color.FromArgb((int)(w * 4 / 7), (int)(w * 4 / 7), (int)(w * 4 / 7)));
+                            c2 = i * 255.0 / (k - 1);
+                            tmp.SetPixel(x, y, Color.FromArgb((int)c2, (int)c2, (int)c2));
+                            break;
                         }
                     }
-                    else
+
+                    if (c >= m[k - 2])
                     {
-                        if (c > th2)
-                        {
-                            if (c > th22) tmp.SetPixel(x, y, Color.FromArgb((int)(w * 3 / 7), (int)(w * 3 / 7), (int)(w * 3 / 7)));
-                            else tmp.SetPixel(x, y, Color.FromArgb((int)(w * 2 / 7), (int)(w * 2 / 7), (int)(w * 2 / 7)));
-                        }
-                        else
-                        {
-                            if (c > th21) tmp.SetPixel(x, y, Color.FromArgb((int)(w / 7), (int)(w / 7), (int)(w / 7)));
-                            else tmp.SetPixel(x, y, Color.FromArgb((int)b, (int)b, (int)b));
-                        }
-                    }
-                }
-            }
-
-            return tmp;
-        }
-
-        private Bitmap random16()
-        {
-            Color color;
-            double c;
-            Bitmap tmp = (Bitmap)grayScaledPhoto.Clone();
-
-            Random r = new Random();
-            double b = 0, w = 255;
-
-            for (int x = 0; x < grayScaledPhoto.Width; x++)
-            {
-                for (int y = 0; y < grayScaledPhoto.Height; y++)
-                {
-                    color = grayScaledPhoto.GetPixel(x, y);
-
-                    c = color.R;
-
-                    int th1 = r.Next(0, 256);
-                    int th2 = r.Next(0, th1 + 1);
-                    int th3 = r.Next(th1, 256);
-                    int th21 = r.Next(0, th2 + 1);
-                    int th22 = r.Next(th2, th1 + 1);
-                    int th31 = r.Next(th1, th3 + 1);
-                    int th32 = r.Next(th3, 256);
-                    int th211 = r.Next(0, th21 + 1);
-                    int th212 = r.Next(th21, th2 + 1);
-                    int th221 = r.Next(th2, th22 + 1);
-                    int th222 = r.Next(th22, th1 + 1);
-                    int th311 = r.Next(th1, th31 + 1);
-                    int th312 = r.Next(th31, th3 + 1);
-                    int th321 = r.Next(th3, th32 + 1);
-                    int th322 = r.Next(th32, 256);
-
-                    if (c > th1)
-                    {
-                        if (c > th3)
-                        {
-                            if (c > th32)
-                            {
-                                if (c > th322) tmp.SetPixel(x, y, Color.FromArgb((int)w, (int)w, (int)w));
-                                else tmp.SetPixel(x, y, Color.FromArgb((int)(w * 14 / 15), (int)(w * 14 / 15), (int)(w * 14 / 15)));
-                            }
-                            else
-                            {
-                                if (c > th321) tmp.SetPixel(x, y, Color.FromArgb((int)(w * 13 / 15), (int)(w * 13 / 15), (int)(w * 13 / 15)));
-                                else tmp.SetPixel(x, y, Color.FromArgb((int)(w * 12 / 15), (int)(w * 12 / 15), (int)(w * 12 / 15)));
-                            }
-                        }
-                        else
-                        {
-                            if (c > th31)
-                            {
-                                if (c > th312) tmp.SetPixel(x, y, Color.FromArgb((int)(w * 11 / 15), (int)(w * 11 / 15), (int)(w * 11 / 15)));
-                                else tmp.SetPixel(x, y, Color.FromArgb((int)(w * 10 / 15), (int)(w * 10 / 15), (int)(w * 10 / 15)));
-                            }
-                            else
-                            {
-                                if (c > th311) tmp.SetPixel(x, y, Color.FromArgb((int)(w * 9 / 15), (int)(w * 9 / 15), (int)(w * 9 / 15)));
-                                else tmp.SetPixel(x, y, Color.FromArgb((int)(w * 8 / 15), (int)(w * 8 / 15), (int)(w * 8 / 15)));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (c > th2)
-                        {
-                            if (c > th22)
-                            {
-                                if (c > th222) tmp.SetPixel(x, y, Color.FromArgb((int)(w * 7 / 15), (int)(w * 7 / 15), (int)(w * 7 / 15)));
-                                else tmp.SetPixel(x, y, Color.FromArgb((int)(w * 6 / 15), (int)(w * 6 / 15), (int)(w * 6 / 15)));
-                            }
-                            else
-                            {
-                                if (c > th221) tmp.SetPixel(x, y, Color.FromArgb((int)(w * 5 / 15), (int)(w * 5 / 15), (int)(w * 5 / 15)));
-                                else tmp.SetPixel(x, y, Color.FromArgb((int)(w * 4 / 15), (int)(w * 4 / 15), (int)(w * 4 / 15)));
-                            }
-                        }
-                        else
-                        {
-                            if (c > th21)
-                            {
-                                if (c > th212) tmp.SetPixel(x, y, Color.FromArgb((int)(w * 3 / 15), (int)(w * 3 / 15), (int)(w * 3 / 15)));
-                                else tmp.SetPixel(x, y, Color.FromArgb((int)(w * 2 / 15), (int)(w * 2 / 15), (int)(w * 2 / 15)));
-                            }
-                            else
-                            {
-                                if (c > th211) tmp.SetPixel(x, y, Color.FromArgb((int)(w * 1 / 15), (int)(w * 1 / 15), (int)(w * 1 / 15)));
-                                tmp.SetPixel(x, y, Color.FromArgb((int)b, (int)b, (int)b));
-                            }
-                        }
+                        c2 = 255.0;
+                        tmp.SetPixel(x, y, Color.FromArgb((int)c2, (int)c2, (int)c2));
                     }
                 }
             }
