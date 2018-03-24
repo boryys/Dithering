@@ -21,6 +21,9 @@ namespace Dithering
             pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
             pictureBox1.SizeMode = PictureBoxSizeMode.CenterImage;
             matrixBox.Enabled = false;
+            sizeKBox.Enabled = false;
+            uniform.Checked = true;
+            label1.Text = "ORIGINAL PHOTO";
             kBox.Text = "2";
             matrixBox.Text = "F&S";
         }
@@ -42,8 +45,6 @@ namespace Dithering
                     grayScaledPhoto.SetPixel(x, y, Color.FromArgb((int)c, (int)c, (int)c));
                 }
             }
-
-            pictureBox.Image = grayScaledPhoto;
         }
 
         private Bitmap randomFilter(int k)
@@ -222,6 +223,8 @@ namespace Dithering
                     originalPhoto = new Bitmap(dlg.FileName);
 
                     grayScaleFilter();
+                    pictureBox.Image = originalPhoto;
+                    label1.Text = "ORIGINAL PHOTO";
 
                     pictureBox1.Image = null;
                 }
@@ -255,6 +258,109 @@ namespace Dithering
                 if (matrixBox.Text == "Sr") Sr(k);
                 if (matrixBox.Text == "A") A(k);
             }
+        }
+
+        private void grayPhoto_Click(object sender, EventArgs e)
+        {
+            pictureBox.Image = grayScaledPhoto;
+            label1.Text = "GRAYSCALED PHOTO";
+        }
+
+        private void originalButton_Click(object sender, EventArgs e)
+        {
+            pictureBox.Image = originalPhoto;
+            label1.Text = "ORIGINAL PHOTO";
+        }
+
+        private void uniform_CheckedChanged(object sender, EventArgs e)
+        {
+            krBox.Enabled = true;
+            kgBox.Enabled = true;
+            kbBox.Enabled = true;
+            sizeKBox.Enabled = false;
+        }
+
+        private void medianCut_CheckedChanged(object sender, EventArgs e)
+        {
+            krBox.Enabled = false;
+            kgBox.Enabled = false;
+            kbBox.Enabled = false;
+            sizeKBox.Enabled = true;
+        }
+
+        private void loadQuantization_Click(object sender, EventArgs e)
+        {
+            if (uniform.Checked)
+            {
+                int kr, kg, kb;
+                kr = Int32.Parse(krBox.Text);
+                kg = Int32.Parse(kgBox.Text);
+                kb = Int32.Parse(kbBox.Text);
+
+                pictureBox1.Image = uniformFilter(kr, kg, kb);
+            }
+            if (medianCut.Checked)
+            {
+                
+            }
+        }
+
+        private Bitmap uniformFilter(int kr, int kg, int kb)
+        {
+            Bitmap tmp = (Bitmap)originalPhoto.Clone();
+            Color color;
+            int newR = 256, newG = 256, newB = 256;
+            int[] matrixR = new int[kr];
+            int[] matrixG = new int[kg];
+            int[] matrixB = new int[kb];
+
+            for (int i = 0; i < kr; i++)
+                matrixR[i] = (int)((i + 1) * 255.0 / kr);
+
+            for (int i = 0; i < kg; i++)
+                matrixG[i] = (int)((i + 1) * 255.0 / kg);
+
+            for (int i = 0; i < kb; i++)
+                matrixB[i] = (int)((i + 1) * 255.0 / kb);
+
+            for (int x = 0; x < originalPhoto.Width; x++)
+            {
+                for (int y = 0; y < originalPhoto.Height; y++)
+                {
+                    color = originalPhoto.GetPixel(x, y);
+
+                    for (int i = 0; i < kr; i++)
+                    {
+                        if(color.R <= matrixR[i])
+                        {
+                            newR = (int)(matrixR[i] - 255.0 / (2 * kr));
+                            break;
+                        }
+                    }
+
+                    for (int i = 0; i < kg; i++)
+                    {
+                        if (color.G <= matrixG[i])
+                        {
+                            newG = (int)(matrixG[i] - 255.0 / (2 * kg));
+                            break;
+                        }
+                    }
+
+                    for (int i = 0; i < kb; i++)
+                    {
+                        if (color.B <= matrixB[i])
+                        {
+                            newB = (int)(matrixB[i] - 255.0 / (2 * kb));
+                            break;
+                        }
+                    }
+
+                    tmp.SetPixel(x, y, Color.FromArgb(newR, newG, newB));
+                }
+            }
+
+            return tmp;
         }
     }
 }
