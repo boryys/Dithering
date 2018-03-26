@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace Dithering
 {
     public partial class Form1 : Form
@@ -301,7 +302,9 @@ namespace Dithering
             }
             if (medianCut.Checked)
             {
-                
+                int k;
+                k = Int32.Parse(sizeKBox.Text);
+                pictureBox1.Image = medianCutFilter(k);
             }
         }
 
@@ -361,6 +364,126 @@ namespace Dithering
             }
 
             return tmp;
+        }
+
+        private Bitmap medianCutFilter(int k)
+        {
+            Bitmap tmp = (Bitmap)originalPhoto.Clone();
+            List<Color> list = new List<Color>();
+            List<Color>[] arr = new List<Color>[2];
+            List<List<Color>> tmpList;
+            List<List<Color>> FinalList = new List<List<Color>>();
+            Cube [] cubeArr = new Cube[k];
+
+            double numOfInerations = Math.Log(k, 2);
+
+            for (int x = 0; x < originalPhoto.Width; x++)
+            {
+                for (int y = 0; y < originalPhoto.Height; y++)
+                {
+                    Color color = tmp.GetPixel(x, y);
+
+                    list.Add(color);
+                }
+            }
+
+            FinalList.Add(list);
+
+            for(int i = 0; i < numOfInerations; i++)
+            {
+                tmpList = new List<List<Color>>(FinalList);
+                FinalList.Clear();
+
+                for(int j = 0; j < tmpList.Count(); j++)
+                {
+                    arr = medianCutFunction(tmpList.ElementAt(j));
+
+                    FinalList.Add(arr[0]);
+                    FinalList.Add(arr[1]);
+                }
+            }
+
+            for(int i = 0; i < k; i++)
+            {
+                cubeArr[i].minR = FinalList.ElementAt(i).Min(c => c.R);
+                cubeArr[i].maxR = FinalList.ElementAt(i).Max(c => c.R);
+                cubeArr[i].minG = FinalList.ElementAt(i).Min(c => c.G);
+                cubeArr[i].maxG = FinalList.ElementAt(i).Max(c => c.G);
+                cubeArr[i].minB = FinalList.ElementAt(i).Min(c => c.B);
+                cubeArr[i].maxB = FinalList.ElementAt(i).Max(c => c.B);
+                cubeArr[i].average = Color.FromArgb((int)FinalList.ElementAt(i).Average(c => c.R), 
+                                                    (int)FinalList.ElementAt(i).Average(c => c.G), 
+                                                    (int)FinalList.ElementAt(i).Average(c => c.B));
+            }
+
+            for (int x = 0; x < originalPhoto.Width; x++)
+            {
+                for (int y = 0; y < originalPhoto.Height; y++)
+                {
+                    Color color = tmp.GetPixel(x, y);
+                    
+                    for(int i = 0; i < k; i++)
+                    {
+                        if(color.R >= cubeArr[i].minR && color.R <= cubeArr[i].maxR &&
+                           color.G >= cubeArr[i].minG && color.G <= cubeArr[i].maxG &&
+                           color.B >= cubeArr[i].minB && color.B <= cubeArr[i].maxB)
+                        {
+                            tmp.SetPixel(x, y, cubeArr[i].average);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return tmp;
+        }
+
+        private List<Color>[] medianCutFunction(List<Color> list)
+        {
+            int minR, maxR, minG, maxG, minB, maxB;
+            List<Color> SortedList = new List<Color>();
+            List<Color>[] finalList = new List<Color>[2];
+
+            finalList[0] = new List<Color>();
+            finalList[1] = new List<Color>();
+
+            minR = list.Min(c => c.R);
+            maxR = list.Max(c => c.R);
+            minG = list.Min(c => c.G);
+            maxG = list.Max(c => c.G);
+            minB = list.Min(c => c.B);
+            maxB = list.Max(c => c.B);
+
+            int sizeR = maxR - minR;
+            int sizeG = maxG - minG;
+            int sizeB = maxB - minB;
+
+            int max = new int[] { sizeR, sizeG, sizeB }.Max();
+
+            if(max == sizeR) SortedList = list.OrderBy(c => c.R).ToList();
+            if(max == sizeG) SortedList = list.OrderBy(c => c.G).ToList();
+            if(max == sizeB) SortedList = list.OrderBy(c => c.B).ToList();
+
+            int n = SortedList.Count() / 2;
+
+            for(int i = 0; i < n; i ++)
+                finalList[0].Add(SortedList.ElementAt(i));
+
+            for (int i = n; i < SortedList.Count(); i++)
+                finalList[1].Add(SortedList.ElementAt(i));
+
+            return finalList;
+        }
+
+        public struct Cube
+        {
+            public int minR;
+            public int maxR;
+            public int minG;
+            public int maxG;
+            public int minB;
+            public int maxB;
+            public Color average;
         }
     }
 }
